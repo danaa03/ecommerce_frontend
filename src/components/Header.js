@@ -2,16 +2,16 @@ import { useState } from "react";
 import { GrClose } from "react-icons/gr";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useNavigate, Link } from "react-router-dom";
-import { isLoggedIn, logout } from "../utils/auth.utils.js";
+import { useUser } from "../context/user.context";
 
 function Header() {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
+  const {user, logout} = useUser();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
-    window.location.reload();
   }
 
   return (
@@ -26,11 +26,9 @@ function Header() {
       </div>
       <nav className="hidden sm:flex justify-between items-center gap-4 font-semibold text-white">
         <Link to = '/' className= "hover:text-lilac-500">Home</Link>
-        <a href="#" className="hover:text-lilac-500">
-          Profile
-        </a>
+        <Link to="/profile" className="hover:text-lilac-500 text-white">Profile</Link>
         <Link to="/my-cart" className="hover:text-lilac-500 text-white">My Cart</Link>
-        {isLoggedIn() ? (
+        {user ? (
           <button onClick={handleLogout} className="hover:text-lilac-500 text-white">
             Logout
           </button>
@@ -52,14 +50,10 @@ function Header() {
                 placeholder="Search..."
                 className="px-4 py-1 border rounded-full text-sm focus:outline-none focus:ring focus:border-blue-300"
             />
-            <a href="#" className="hover:text-lilac-500 text-white">
-              Home
-            </a>
-            <a href="#" className="hover:text-lilac-500 text-white">
-              Profile
-            </a>
+            <Link to="/" className="hover:text-lilac-500 text-white">Home</Link>
+            <Link to="/profile" className="hover:text-lilac-500 text-white">Profile</Link>
             <Link to="/my-cart" className="hover:text-lilac-500 text-white">My Cart</Link>
-            {isLoggedIn() ? (
+            { user? (
               <button onClick={handleLogout} className="hover:text-lilac-500 text-white">
                 Logout
               </button>

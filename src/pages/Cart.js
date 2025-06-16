@@ -1,14 +1,26 @@
 import Header from '../components/Header.js';
-import {fetchCartItems, addProductToCart} from '../api/cart.apis.js';
+import {fetchCartItems, addProductToCart, deleteProductFromCart, checkout} from '../api/cart.apis.js';
 import {useState, useEffect} from "react";
+import { useUser } from '../context/user.context.js';
+import {useNavigate} from "react-router-dom";
 
 function Cart() {
 
     const [cartItems, setCartItems] = useState([]);
+    const {user, token} = useUser();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getCartItems = async() => {
-            const data = await fetchCartItems();
+            let data;
+            let guestCart = localStorage.getItem("guestCart");
+            if(guestCart&&user)
+            {
+                data = await fetchCartItems(user, token, guestCart); //merges
+                guestCart = localStorage.getItem("guestCart");
+            }
+            data = await fetchCartItems(user, token, guestCart); //re-fetches merged or first-fetch if not logged in 
+            console.log("DATA: ", data)
             setCartItems(data);
         }
         getCartItems();
@@ -16,24 +28,28 @@ function Cart() {
 
     const increment = async(product) => {
         try {
-            const response = await addProductToCart(product);
-            console.log(response);
-            const updatedCart = await fetchCartItems();
+            await addProductToCart(product, user, token);
+            const updatedCart = await fetchCartItems(user, token);
             setCartItems(updatedCart);
         } catch (err) {
             console.error(err);
         }
     };
 
-    const decrement = (id) => {
-        setCartItems(prev =>
-            prev.map(item =>
-                item.id === id && item.quantity > 1
-                ? { ...item, quantity: item.quantity - 1 }
-                : item
-            )
-        );
+    const decrement = async(id) => {
+        try {
+            const response = await deleteProductFromCart(id, user, token);
+            console.log(response);
+            const updatedCart = await fetchCartItems(user, token);
+            setCartItems(updatedCart);
+        } catch (err) {
+            console.error(err);
+        }
     };
+
+    const handleCheckout = async() => {
+        navigate("/checkout");
+    }
 
   return (
     <>
@@ -52,7 +68,7 @@ function Cart() {
                 </div>
                 <div className="flex items-center space-x-2">
                 <button
-                    onClick={() => decrement(item.product.id)}
+                    onClick={() => decrement(item.id)}
                     className="bg-purple-600 text-white px-2 py-1 rounded-full hover:bg-purple-700"
                 >
                     −
@@ -67,6 +83,12 @@ function Cart() {
                 </div>
             </div>
             ))}
+             <button
+                onClick={handleCheckout}
+                className="mt-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold py-3 px-6 rounded-2xl shadow-lg transition duration-200 w-full max-w-xs"
+                >
+                🛒 Proceed to Checkout
+            </button>
         </div>
         </div>
 

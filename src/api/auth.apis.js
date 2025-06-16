@@ -15,22 +15,24 @@ export async function login(email, password) {
     });
 
     const data = await response.json(); 
+    console.log("RECEIVED USER DATA: ", data);
 
     if (!response.ok) {
       throw new Error(data.error || 'Login failed');
     }
 
-    console.log('Success:', data); 
-    localStorage.setItem("token", data.accessToken);
-    localStorage.setItem("refreshToken", data.refreshToken);
-    return;
+    return {
+        user: data.user,
+        token: data.accessToken,
+        refreshToken: data.refreshToken,
+    };
   } catch (error) {
     console.error('Caught Error:', error.message); 
     throw error;
   }
 }
 
-export async function signup(email, name, password, confirmPassword, phone) {
+export async function signup(email, name, password, confirmPassword, phone, address) {
   try {
     const response = await fetch(API_URL + '/signup', {
       method: 'POST',
@@ -43,6 +45,7 @@ export async function signup(email, name, password, confirmPassword, phone) {
         confirmPassword,
         name,
         phone,
+        address,
       }),
     });
 
