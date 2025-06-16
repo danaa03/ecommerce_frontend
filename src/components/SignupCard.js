@@ -10,6 +10,7 @@ export default function SignupCard() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
 
     const [errors, setErrors] = useState({});
 
@@ -27,6 +28,7 @@ export default function SignupCard() {
     if (!password) newErrors.password = "Password is required";
     if (!confirmPassword) newErrors.confirmPassword = "Please confirm your password";
     if (!phone) newErrors.phone = "Phone number is required";
+    if (!address) newErrors.address = "Address is required";
 
     if (password && password.length <= 6)
       newErrors.password = "Password must be more than 6 characters";
@@ -38,9 +40,8 @@ export default function SignupCard() {
 
     if (Object.keys(newErrors).length === 0) {
         try {
-            await signup(email, name,password,confirmPassword,phone);
+            await signup(email, name,password,confirmPassword,phone, address);
         } catch (err) {
-            console.log("Hello,",err.message)
             if(err?.message.trim()==="Email Already Exists")
             {
                 newErrors.email="Email already exists!";
@@ -52,13 +53,14 @@ export default function SignupCard() {
             }
             return;
         }
-        console.log("Form submitted:", { email, name, password, phone });
+        console.log("Form submitted:", { email, name, password, phone, address });
 
         setConfirmPassword("");
         setPassword("");
         setPhone("");
         setName("");
         setEmail("");
+        setAddress("");
 
         setShowVerifyAlert(true);
     }
@@ -134,8 +136,20 @@ export default function SignupCard() {
               />
               {errors.phone && <span className="text-red-500 text-sm">{errors.phone}</span>}
             </div>
-          </div>
 
+            <div className="flex flex-col gap-1 col-span-2">
+              <label className="ms-1">Address</label>
+              <input
+                type="text"
+                placeholder="House Number, Street Number, City, Country"
+                className="rounded p-2 border border-gray-300"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+              {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
+            </div>
+          </div>
+      
           <div className="mt-3">
             <button
               type="submit"

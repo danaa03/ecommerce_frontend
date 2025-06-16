@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../api/auth.apis';
+import { useUser } from '../context/user.context';
 
 export default function LoginCard() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState("");
+  const {login: contextLogin} = useUser();
 
   const navigate = useNavigate();
 
@@ -22,7 +24,9 @@ export default function LoginCard() {
 
     if (Object.keys(newErrors).length === 0) {
       try {
-        await login(email, password);
+        const {user, token, refreshToken} = await login(email, password);
+        contextLogin(user, token, refreshToken);
+
         setEmail("");
         setPassword("");
         navigate('/');
