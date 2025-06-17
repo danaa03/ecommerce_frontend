@@ -1,8 +1,9 @@
-const API_URL = "http://localhost:5000/product";
+import { customFetch } from "./customFetch.apis";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export async function fetchProducts () {
     try {
-        const res = await fetch(API_URL);
+        const res = await customFetch(API_URL+"/product/");
         if(!res.ok) throw new Error("Error while fetching products");
         const data = await res.json();
         return data;
@@ -14,7 +15,7 @@ export async function fetchProducts () {
 
 export async function fetchProductById (id) {
     try {
-        const res = await fetch(`${API_URL}/${id}`);
+        const res = await customFetch(`${API_URL}/product/${id}`);
         if(!res.ok)
         {
             console.log("Error while fetching product");
@@ -30,7 +31,7 @@ export async function fetchProductById (id) {
 
 export async function fetchMyProducts(token) {
     try {
-        const res = await fetch(API_URL+"/my-products", {
+        const res = await customFetch(API_URL+"/product/my-products", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ export async function fetchMyProducts(token) {
 
 export async function addProduct(newProduct, token) {
     try {
-        const response = await fetch(API_URL + '/add-product', {
+        const response = await customFetch(API_URL + '/product/add-product', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -85,7 +86,7 @@ export async function addProduct(newProduct, token) {
 export async function deleteProduct(productId, token) {
     console.log("SDSD: " ,productId);
  try {
-        const response = await fetch(API_URL + `/${productId}`, {
+        const response = await customFetch(API_URL + `/product/${productId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

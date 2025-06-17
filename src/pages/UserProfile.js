@@ -40,7 +40,7 @@ function UserProfile() {
           <p><strong>Contact:</strong> {user?.phone}</p>
           <p><strong>Address:</strong> {user?.address}</p>
         </div>
-        <button className="mt-4 px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-800">Edit</button>
+        {/* <button className="mt-4 px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-800">Edit</button> */}
       </div>
 
       <div className="bg-white p-6 rounded-2xl shadow-lg mb-8">

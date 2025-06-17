@@ -1,8 +1,8 @@
-const API_URL = "http://localhost:5000/auth";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export async function login(email, password) {
   try {
-    const response = await fetch(API_URL + '/login', {
+    const response = await fetch(API_URL + '/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,7 +15,6 @@ export async function login(email, password) {
     });
 
     const data = await response.json(); 
-    console.log("RECEIVED USER DATA: ", data);
 
     if (!response.ok) {
       throw new Error(data.error || 'Login failed');
@@ -34,7 +33,7 @@ export async function login(email, password) {
 
 export async function signup(email, name, password, confirmPassword, phone, address) {
   try {
-    const response = await fetch(API_URL + '/signup', {
+    const response = await fetch(API_URL + 'auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

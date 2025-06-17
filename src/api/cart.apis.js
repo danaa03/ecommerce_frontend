@@ -1,10 +1,12 @@
-const API_URL = "http://localhost:5000/cart";
+import { customFetch } from "./customFetch.apis";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
 
 export async function addProductToCart(product, user, token) {
   try {
     //check if user authorized
     if (user) {
-      const response = await fetch(API_URL + '/add-product', {
+      const response = await customFetch(API_URL + '/cart/add-product', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -18,9 +20,9 @@ export async function addProductToCart(product, user, token) {
       const data = await response.json();
 
       if (!response.ok) {
-        console.log("KFKFKF: ", data)
         if(data.msg==="cannot add own product to cart")
           alert("You cannot add your own product to your cart!");
+        
         throw new Error(data.error || 'Add product to cart failed');
       }
 
@@ -76,7 +78,7 @@ export async function deleteProductFromCart(id, user, token) {
   try {
     //check if user authorized
     if (user) {
-      const response = await fetch(API_URL + '/remove-product', {
+      const response = await customFetch(API_URL + '/cart/remove-product', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -123,13 +125,11 @@ export async function deleteProductFromCart(id, user, token) {
 
 export async function fetchCartItems(user, token, guestCart) {
   try {
-    console.log("Guest cart fecthed after merge: ", guestCart);
+    console.log("Guest cart fetched after merge: ", guestCart);
     if (!user) {
       console.log("user not logged in while fetching cart")
       //fetch from localStorage and display
       if (guestCart) {
-        console.log("YES")
-        console.log("dsjdsjdhjs", JSON.parse(guestCart));
         return JSON.parse(guestCart);
       }
     }
@@ -139,7 +139,7 @@ export async function fetchCartItems(user, token, guestCart) {
         guestCart = JSON.parse(guestCart);
         console.log("cart also present in local storage", guestCart);
 
-        const response = await fetch(API_URL + '/merge-carts', {
+        const response = await customFetch(API_URL + '/cart/merge-carts', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ export async function fetchCartItems(user, token, guestCart) {
         return data.response;
       }
       else {
-        const response = await fetch(API_URL + '/', {
+        const response = await customFetch(API_URL + '/cart/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

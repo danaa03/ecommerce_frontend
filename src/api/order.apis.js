@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:5000/order";
+import { customFetch } from "./customFetch.apis";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export async function checkout(user, token) {
 
@@ -8,7 +9,7 @@ export async function checkout(user, token) {
     //check if user authorized
     if(user)
     {
-        const response = await fetch(API_URL + '/checkout', {
+        const response = await customFetch(API_URL + '/order/checkout', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
