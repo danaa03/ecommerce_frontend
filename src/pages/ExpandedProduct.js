@@ -5,7 +5,9 @@ import { addProductToCart } from "../api/cart.apis";
 import { addComment, fetchComments, updateComment, deleteComment } from "../api/comment.apis";
 import {FaTrash, FaEdit} from "react-icons/fa";
 import { useUser } from "../context/user.context";
+import { refreshAccessToken } from "../api/refresh.apis";
 import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 
 export default function ExpandedProduct(){
     const [product, setProduct] = useState({});
@@ -14,6 +16,8 @@ export default function ExpandedProduct(){
     const [disable, setDisable] = useState(true);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
+    const navigate = useNavigate();
+
     const {user, token} = useUser();
     const {id} = useParams();
 

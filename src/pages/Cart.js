@@ -32,7 +32,16 @@ function Cart() {
             const updatedCart = await fetchCartItems(user, token);
             setCartItems(updatedCart);
         } catch (err) {
-            console.error(err);
+            console.error("FT",err);
+            // if(response.status===401)
+            // { 
+            // console.error("UNAUTHORIZED");
+            // try{
+            //     await refreshToken();
+            // } catch (err) {
+            //     console.error("Error while refreshing access token: ", err);
+            // }
+            // }
         }
     };
 

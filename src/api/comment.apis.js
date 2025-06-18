@@ -1,10 +1,11 @@
-const API_URL = "http://localhost:5000/comment";
+import { customFetch } from "./customFetch.apis";
+const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export async function addComment(productId, content) {
     try {
         console.log(productId, content);
         const token = localStorage.getItem('token');
-        const res = await fetch(API_URL + '/add-comment', {
+        const res = await customFetch(API_URL + '/comment/add-comment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ export async function addComment(productId, content) {
 
 export async function fetchComments(productId) {
     try {
-        const res = await fetch(`${API_URL}/${productId}`, {
+        const res = await customFetch(`${API_URL}/comment/${productId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ export async function fetchComments(productId) {
 export async function updateComment(commentId, content, token) {
     try {
         console.log(commentId, content);
-        const res = await fetch(`${API_URL}/update/${commentId}`, {
+        const res = await customFetch(`${API_URL}/comment/update/${commentId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,7 +88,7 @@ export async function updateComment(commentId, content, token) {
 
 export async function deleteComment(commentId, token) {
     try {
-        const res = await fetch(`${API_URL}/delete/${commentId}`, {
+        const res = await customFetch(`${API_URL}/comment/delete/${commentId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

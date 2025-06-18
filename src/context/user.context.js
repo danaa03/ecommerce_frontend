@@ -48,8 +48,13 @@ export function UserProvider({ children }) {
     setRefreshToken(null);
   };
 
+  const updateToken = (newToken) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
+  };
+
   return (
-    <UserContext.Provider value={{ user, token, refreshToken, login, logout }}>
+    <UserContext.Provider value={{ user, token, refreshToken, login, logout, updateToken }}>
       {children}
     </UserContext.Provider>
   );
