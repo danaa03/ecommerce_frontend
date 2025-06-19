@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../api/auth.apis';
+import { login } from '../api/auth.api';
 import { useUser } from '../context/user.context';
 
 export default function LoginCard() {

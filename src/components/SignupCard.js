@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signup } from '../api/auth.apis';
+import { Link } from 'react-router-dom';
+import { signup } from '../api/auth.api';
 import VerifyEmailAlert from './VerificationAlert';
 
 export default function SignupCard() {
@@ -15,8 +15,6 @@ export default function SignupCard() {
     const [errors, setErrors] = useState({});
 
     const [showVerifyAlert, setShowVerifyAlert] = useState(false);
-
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +38,7 @@ export default function SignupCard() {
 
     if (Object.keys(newErrors).length === 0) {
         try {
-            await signup(email, name,password,confirmPassword,phone, address);
+            await signup(email, name, password, confirmPassword, phone, address);
         } catch (err) {
             if(err?.message.trim()==="Email Already Exists")
             {

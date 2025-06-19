@@ -33,7 +33,7 @@ export async function login(email, password) {
 
 export async function signup(email, name, password, confirmPassword, phone, address) {
   try {
-    const response = await fetch(API_URL + 'auth/signup', {
+    const response = await fetch(API_URL + '/auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

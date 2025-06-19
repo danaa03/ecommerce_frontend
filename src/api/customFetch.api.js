@@ -1,4 +1,4 @@
-import { refreshAccessToken } from './refresh.apis';
+import { refreshAccessToken } from './refresh.api';
 import { logout, updateToken } from '../helpers/token.helpers';
 
 export const customFetch = async (url, options = {}) => {

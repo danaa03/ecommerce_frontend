@@ -1,22 +1,22 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
-import { checkout } from "../api/order.apis";
+import { checkout } from "../api/order.api";
 import { useUser } from "../context/user.context";
 
 export default function Checkout() {
   const { user, token } = useUser();
   const [order, setOrder] = useState({});
   const [orderedItems, setOrderedItems] = useState([]);
+  const [cartCount, setCartCount] = useState(20);
 
   useEffect(() => {
     console.log("checkout");
     async function checkoutOfCart() {
       try {
         const response = await checkout(user, token);
-        console.log("Checked out: ", response);
-        console.log("SASAS: ", response.orderedItems)
         setOrder(response.order);
         setOrderedItems(response.orderedItems);
+        setCartCount(0);
       } catch (err) {
         console.error("Error while checking out: ", err);
       }
@@ -26,7 +26,7 @@ export default function Checkout() {
 
   return (
     <>
-      <Header />
+      <Header cartCount={cartCount}/>
       <div className="p-6 bg-white min-h-screen">
         <h2 className="text-2xl font-semibold text-green-700 mb-4">Order Successfully Placed</h2>
 

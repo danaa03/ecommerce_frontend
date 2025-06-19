@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchProductById } from "../api/products.apis";
-import { addProductToCart } from "../api/cart.apis";
-import { addComment, fetchComments, updateComment, deleteComment } from "../api/comment.apis";
+import { fetchProductById } from "../api/products.api";
+import { addProductToCart } from "../api/cart.api";
+import { addComment, fetchComments, updateComment, deleteComment } from "../api/comment.api";
 import {FaTrash, FaEdit} from "react-icons/fa";
 import { useUser } from "../context/user.context";
-import { refreshAccessToken } from "../api/refresh.apis";
 import Header from "../components/Header";
-import { useNavigate } from "react-router-dom";
+import Alert  from '../components/VerificationAlert.js';
 
 export default function ExpandedProduct(){
     const [product, setProduct] = useState({});
@@ -16,7 +15,7 @@ export default function ExpandedProduct(){
     const [disable, setDisable] = useState(true);
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
-    const navigate = useNavigate();
+    const [showAlert, setShowAlert] = useState(false);
 
     const {user, token} = useUser();
     const {id} = useParams();
@@ -26,6 +25,7 @@ export default function ExpandedProduct(){
     const handleAddToCart = async() => {
         try {
             await addProductToCart(product, user, token);
+            setShowAlert(true);
         } catch (err) {
             console.error(err);
         }
@@ -54,6 +54,7 @@ export default function ExpandedProduct(){
     const handleUpdateComment = async() => {
         try {
             const response = await updateComment(editingCommentId, editedContent, token);
+            console.log(response);
             //create new object reference with changed new content
             const updated = comments.map(c =>
                 c.id === editingCommentId ? { ...c, content: editedContent } : c
@@ -92,12 +93,18 @@ export default function ExpandedProduct(){
     },[id])
     return (
         <>
+         <Alert
+                show={showAlert}
+                onClose={() => setShowAlert(false)}
+                title="Added to Cart"
+                message="Product has been added to your cart."
+        />
         <Header/>
         <div className="min-h-screen bg-white px-6 py-10">
             <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
                 <div className="bg-purple-100 p-6 rounded-3xl shadow-lg flex items-center justify-center">
                 <img
-                    src={product?.image || "https://via.placeholder.com/400"}
+                    src={product?.image || 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}
                     alt={product?.name}
                     className="rounded-xl max-h-96 object-contain"
                 />
