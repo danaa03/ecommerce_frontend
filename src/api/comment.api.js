@@ -1,4 +1,4 @@
-import { customFetch } from "./customFetch.apis";
+import { customFetch } from "./customFetch.api";
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export async function addComment(productId, content) {

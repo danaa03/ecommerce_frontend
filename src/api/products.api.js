@@ -1,4 +1,4 @@
-import { customFetch } from "./customFetch.apis";
+import { customFetch } from "./customFetch.api";
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export async function fetchProducts () {
@@ -104,5 +104,35 @@ export async function deleteProduct(productId, token) {
 
     } catch (err) {
         console.error("Error deleting product: ", err.message);
+    }
+}
+
+export async function updateProduct(id, name, description, price, token) {
+    try {
+        console.log(id, name, price, description);
+        const res = await customFetch(`${API_URL}/product/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                name,
+                description, 
+                price,
+            }),
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Failed to update product");
+        }
+
+        const data = await res.json();
+        return data;
+
+    } catch (err){
+        console.error("Error updating product:", err.message);
+        throw err;
     }
 }

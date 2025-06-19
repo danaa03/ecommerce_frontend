@@ -1,14 +1,17 @@
 import Header from '../components/Header.js';
-import { fetchProducts } from '../api/products.apis.js';
+import { fetchProducts } from '../api/products.api.js';
 import { useState, useEffect } from "react";
-import { addProductToCart } from '../api/cart.apis';
+import { addProductToCart } from '../api/cart.api.js';
 import { Link } from "react-router-dom";
 import { useUser } from '../context/user.context.js';
-
+import Alert  from '../components/VerificationAlert.js';
+ 
 function Home() {
   const [products, setProducts] = useState([]);
   const { user, token } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+  const [ showAlert, setShowAlert ] = useState(false);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -22,6 +25,8 @@ function Home() {
     try {
       const response = await addProductToCart(product, user, token);
       console.log(response);
+      setCartCount( prev=>prev+1 );
+      setShowAlert(true);
     } catch (err) {
       console.error(err);
     }
@@ -33,8 +38,14 @@ function Home() {
 
   return (
     <>
-      <Header />
-      <div className="p-6 bg-white min-h-screen">
+      <Alert
+        show={showAlert}
+        onClose={() => setShowAlert(false)}
+        title="Added to Cart"
+        message="Product has been added to your cart."
+      />
+      <Header cartCount={cartCount} />
+      <div className="p-8 bg-white min-h-screen">
         <h2 className="text-2xl font-semibold text-purple-900 mb-6">Latest Products</h2>
 
         <div className="max-w-7xl ">
@@ -43,17 +54,17 @@ function Home() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search..."
-            className="px-4 py-3 border rounded-full text-sm focus:outline-none focus:ring focus:border-blue-300 mb-6 w-full"
+            className="px-4 py-3 border rounded-sm text-sm focus:outline-none focus:ring focus:border-blue-300 mb-6 w-full"
           />
-
+          {/* Product Display Card */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
               <Link to={`/product/${product.id}`} key={product.id}>
                 <div className="bg-purple-50 border border-purple-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                   <img
-                    src={product.image || 'https://via.placeholder.com/150'}
+                    src={product.image || 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}
                     alt={product.name}
-                    className="w-full h-48 object-cover rounded-t-2xl"
+                    className="w-full h-48 object-cover rounded-t-xl"
                   />
                   <div className="p-4 flex-grow flex flex-col">
                     <h3 className="text-lg font-bold text-purple-800">{product.name}</h3>

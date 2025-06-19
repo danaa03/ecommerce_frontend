@@ -53,8 +53,13 @@ export function UserProvider({ children }) {
     setToken(newToken);
   };
 
+  const updateUser = (newUser) => {
+    localStorage.setItem("user", newUser);
+    setUser(newUser);
+  };
+
   return (
-    <UserContext.Provider value={{ user, token, refreshToken, login, logout, updateToken }}>
+    <UserContext.Provider value={{ user, token, refreshToken, login, logout, updateToken, updateUser }}>
       {children}
     </UserContext.Provider>
   );

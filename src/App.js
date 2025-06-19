@@ -6,6 +6,7 @@ import Cart from "./pages/Cart";
 import Product from "./pages/ExpandedProduct";
 import UserProfile from "./pages/UserProfile";
 import PrivateRoute from "./components/PrivateRoute";
+import MyProducts from "./pages/MyProducts";
 import Checkout from "./pages/Checkout";
 import './index.css';
 
@@ -31,6 +32,14 @@ function App() {
           element={
             <PrivateRoute>
               <UserProfile />
+            </PrivateRoute>
+          }
+      />
+       <Route 
+          path="/my-products"
+          element={
+            <PrivateRoute>
+              <MyProducts />
             </PrivateRoute>
           }
       />
